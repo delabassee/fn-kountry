@@ -1,0 +1,8 @@
+name: kountry
+version: 0.0.1
+runtime: kotlin
+#cmd: com.fn.example.fdk.FdkFuncKt::country
+cmd: com.fn.example.jackson.JacksonFuncKt::country
+build_image: fnproject/fn-java-fdk-build:jdk9-1.0.64
+run_image: fnproject/fn-java-fdk:jdk9-1.0.64
+format: http
