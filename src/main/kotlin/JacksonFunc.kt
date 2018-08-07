@@ -3,18 +3,21 @@ package com.fn.example.jackson
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.delabassee.Country
 
-fun filterCountry(filter: String): List<Country> = when {
-    filter.isNullOrEmpty() -> (Country.getAll())
-    else -> {
-        val allCountry = Country.getAll()
-        val filteredCountry = allCountry.filter { it.name.contains(filter.trim(), true) }
-        if (filteredCountry.isEmpty()) allCountry
-        else filteredCountry
+fun country(input: String): String {
+    return jacksonObjectMapper().writeValueAsString( listCountries(input) )
+}
+
+fun listCountries(input: String): List<Country> = when {
+    input.isEmpty() -> Country.getAll()
+    else -> Country.getAll().filteredOrAll {
+        it.name.contains(input.trim(), true)
     }
 }
 
-// function entry point
-fun country(input: String): String {
-    val filteredCountry = filterCountry(input)
-    return jacksonObjectMapper().writeValueAsString(filteredCountry)
+private fun <T> List<T>.filteredOrAll(predicate: (T) -> Boolean): List<T> {
+    val filtered = filter(predicate)
+    return when {
+        filtered.isEmpty() -> this
+        else -> filtered
+    }
 }

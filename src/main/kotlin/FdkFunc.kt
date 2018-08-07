@@ -3,11 +3,16 @@ package com.fn.example.fdk
 import com.delabassee.Country
 
 fun country(input: String): List<Country> = when {
-    input.isNullOrEmpty() -> (Country.getAll())
-    else -> {
-        val allCountry = Country.getAll()
-        val filteredCountry = allCountry.filter { it.name.contains(input.trim(), true) }
-        if (filteredCountry.isEmpty()) allCountry
-        else filteredCountry
+    input.isEmpty() -> Country.getAll()
+    else -> Country.getAll().filteredOrAll {
+        it.name.contains(input.trim(), true)
+    }
+}
+
+private fun <T> List<T>.filteredOrAll(predicate: (T) -> Boolean): List<T> {
+    val filtered = filter(predicate)
+    return when {
+        filtered.isEmpty() -> this
+        else -> filtered
     }
 }
